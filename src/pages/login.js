@@ -1,22 +1,30 @@
 import React from 'react'
 import FirebaseContext from '../context/firebase'
 import { useState, useContext, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-
+import { Link, useHistory } from 'react-router-dom'
+import * as ROUTES from '../constants/routes'
 
 const Login = () => {
 
     const history = useHistory()
     const { firebase } = useContext(FirebaseContext)
 
-    const { email, setEmail } = useState('')
-    const { password, setPassword } = useState('')
-    const { error, setError } = useState('')
+    const [ email, setEmail ]  = useState('')
+    const [ password, setPassword ]  = useState('')
+    const [ error, setError ]  = useState('')
 
     const isInvalid = password === '' || email === ''
 
-    const handleLogin = () => {
-
+    const handleLogin = async (e) => {
+        e.preventDefault()
+        try {
+            await firebase.auth().signInWithEmailAndPassword(email, password)
+            history.push(ROUTES.DASHBOARD)
+        } catch(error) {
+            setEmail('');
+            setPassword('');
+            setError(error.message)
+        }
     }
 
     useEffect(() => {
@@ -60,6 +68,9 @@ const Login = () => {
             <div className = "flex justify-center items-center flex-col w-full bg-white p-4 border border-gray-primary">
                 <p className = 'text-sm'>
                     Don't have an account? {``}
+                    <Link to = "/signup" className = "font-bold text-blue-medium">
+                        Sign up
+                    </Link>
                 </p>
             </div>
         </div>
