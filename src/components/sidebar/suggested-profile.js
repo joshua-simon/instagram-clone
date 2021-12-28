@@ -1,27 +1,50 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { updateLoggedInUserFollowing, updateFollowedUserFollowers } from '../../services/firebase'
 
-export default function SuggestedProfile({userDocId, username, profileId, userId}) {
-    const [ followed, setFollowed ] = useState(false)
+export default function SuggestedProfile({spDocId,username, profileId,userId,loggedInUserDocId}) {
 
-    return !followed ? (
-        //remove the profile you've followed from the suggested profile list
-        <div className = 'flex flex-row items-center align-items justify-between'>
-            <div className = 'flex-items-center justify-between'>
-                <img
-                    className = 'rounded-full w-8 flex mr-3'
-                    src = {`/images/avatars/${username}.jpg`}
-                    alt = ""
-                />
-            </div>
-        </div>
-    ) : null
+  const [followed, setFollowed] = useState(false);
+  
+  async function handleFollowUser() {
+    setFollowed(true)
+    
+    //update the following array of the logged in user
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId)
+
+    //update the followers array of the user who has been followed
+    await updateFollowedUserFollowers(spDocId,userId)
+
+ }
+
+  //render profiles whilst removing the profile you've followed from the suggested profile list
+  return !followed ? (
+    <div className="flex flex-row items-center align-items justify-between">
+      <div className="flex-items-center justify-between">
+        <img
+          className="rounded-full w-8 flex mr-3"
+          src={`/images/avatars/${username}.jpg`}
+          alt=""
+        />
+        <Link to={`/p/${username}`}>
+          <p className="font-bold text-sm">{username}</p>
+        </Link>
+      </div>
+        <button
+          className="text-xs font-bold text-blue-medium"
+          type="button"
+          onClick={handleFollowUser}
+        >
+          follow
+        </button>
+    </div>
+  ) : null;
 }
 
 SuggestedProfile.propTypes = {
-    userDocId: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    profileId: PropTypes.string.isRequired,
-    userId: PropTypes.string.isRequired
-}
-
+  spDocId: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  profileId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+};

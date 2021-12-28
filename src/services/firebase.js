@@ -28,3 +28,17 @@ export async function getSuggestedProfiles(userId, following){
     .filter((profile) => profile.userId !== userId && !following.includes(profile.userId))
     //don't want to include own profile, or profiles already following
 }
+
+//updateLoggedInUserFollowing, updateFollowedUserFollowers
+
+export async function updateLoggedInUserFollowing(loggedInUserDocId, profileId, isFollowingProfile){
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(loggedInUserDocId)
+    .update({
+      following: isFollowingProfile
+      ? FieldValue.arrayRemove(profileId)
+      : FieldValue.arrayUnion(profileId)
+    })
+}
