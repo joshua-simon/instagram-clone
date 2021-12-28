@@ -1,9 +1,27 @@
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 export default function SuggestedProfile({userDocId, username, profileId, userId}) {
-    return (
-        <div>
-            I am a suggested profile {username}
+    const [ followed, setFollowed ] = useState(false)
+
+    return !followed ? (
+        //remove the profile you've followed from the suggested profile list
+        <div className = 'flex flex-row items-center align-items justify-between'>
+            <div className = 'flex-items-center justify-between'>
+                <img
+                    className = 'rounded-full w-8 flex mr-3'
+                    src = {`/images/avatars/${username}.jpg`}
+                    alt = ""
+                />
+            </div>
         </div>
-    )
+    ) : null
+}
+
+SuggestedProfile.propTypes = {
+    userDocId: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    profileId: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired
 }
 
