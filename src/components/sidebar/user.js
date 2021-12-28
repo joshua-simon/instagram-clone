@@ -18,6 +18,10 @@ const User = ({ username, fullName }) => {
                         alt = ''
                     />
                 </div>
+                <div className = 'col-span-3'>
+                    <p className = 'font-bold text-sm'>{username}</p>
+                    <p className = 'text-sm'>{fullName}</p>
+                </div>
             </Link>
         )
     )
@@ -25,8 +29,9 @@ const User = ({ username, fullName }) => {
 }
 
 User.propTypes = {
-    username: propTypes.string,
-    fullName: propTypes.string
+    username: propTypes.string.isRequired,
+    fullName: propTypes.string.isRequired
 }
 
-export default User
+export default memo(User)
+
