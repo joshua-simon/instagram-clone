@@ -29,7 +29,7 @@ export async function getSuggestedProfiles(userId, following){
     //don't want to include own profile, or profiles already following
 }
 
-//updateLoggedInUserFollowing, updateFollowedUserFollowers
+
 
 export async function updateLoggedInUserFollowing(loggedInUserDocId, profileId, isFollowingProfile){
   return firebase
@@ -42,3 +42,16 @@ export async function updateLoggedInUserFollowing(loggedInUserDocId, profileId, 
       : FieldValue.arrayUnion(profileId)
     })
 }
+
+export async function updateFollowedUserFollowers( profileDocId, loggedInUserDocId, isFollowingProfile){
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(profileDocId)
+    .update({
+      followers: isFollowingProfile
+      ? FieldValue.arrayRemove(loggedInUserDocId)
+      : FieldValue.arrayUnion(loggedInUserDocId)
+    })
+}
+

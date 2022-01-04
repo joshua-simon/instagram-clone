@@ -3,19 +3,16 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers } from '../../services/firebase'
 
-export default function SuggestedProfile({spDocId,username, profileId,userId,loggedInUserDocId}) {
-
+export default function SuggestedProfile({profileDocId,username, profileId,userId,loggedInUserDocId}) {
+  console.log('cocks')
+  console.log(`this is profileId: ${profileId}`)
   const [followed, setFollowed] = useState(false);
   
   async function handleFollowUser() {
+    console.log("big cocks")
     setFollowed(true)
-    
-    //update the following array of the logged in user
-    await updateLoggedInUserFollowing(loggedInUserDocId, profileId)
-
-    //update the followers array of the user who has been followed
-    await updateFollowedUserFollowers(spDocId,userId)
-
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false)
+    await updateFollowedUserFollowers(profileDocId,userId,false)
  }
 
   //render profiles whilst removing the profile you've followed from the suggested profile list
@@ -39,12 +36,12 @@ export default function SuggestedProfile({spDocId,username, profileId,userId,log
           follow
         </button>
     </div>
-  ) : null;
+  ) : null; 
 }
 
-SuggestedProfile.propTypes = {
-  spDocId: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  profileId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
-};
+// SuggestedProfile.propTypes = {
+//   profileDocId: PropTypes.string.isRequired,
+//   username: PropTypes.string.isRequired,
+//   profileId: PropTypes.string.isRequired,
+//   userId: PropTypes.string.isRequired,
+// };

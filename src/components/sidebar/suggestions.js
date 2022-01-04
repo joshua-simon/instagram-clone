@@ -29,7 +29,7 @@ const Suggestions = ({ userId, following, loggedInUserDocId }) => {
                 {profiles.map((profile) => (
                     <SuggestedProfile
                         key = {profile.docId}
-                        spDocId = {profile.docId} //suggested profile doc id
+                        profileDocId= {profile.docId} //suggested profile doc id
                         username = {profile.username}
                         profileId = {profile.userId}
                         userId = {userId}
