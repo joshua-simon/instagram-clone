@@ -4,12 +4,10 @@ import { Link } from "react-router-dom";
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers } from '../../services/firebase'
 
 export default function SuggestedProfile({profileDocId,username, profileId,userId,loggedInUserDocId}) {
-  console.log('cocks')
   console.log(`this is profileId: ${profileId}`)
   const [followed, setFollowed] = useState(false);
   
   async function handleFollowUser() {
-    console.log("big cocks")
     setFollowed(true)
     await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false)
     await updateFollowedUserFollowers(profileDocId,userId,false)
