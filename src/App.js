@@ -7,6 +7,8 @@ import NotFound from './pages/not-found'
 import Dashboard from './pages/dashboard'
 import useAuthListener from './hooks/use-auth-listener'
 import UserContext from './context/user'
+import ProtectedRoute from './helpers/protected.route'
+
 
 function App() {
   const { user } = useAuthListener()
@@ -16,7 +18,9 @@ function App() {
         <Switch>
           <Route path = {ROUTES.LOGIN} component = {Login} />
           <Route path = {ROUTES.SIGN_UP} component = {SignUp} />
-          <Route path = {ROUTES.DASHBOARD} component = {Dashboard} />
+          <ProtectedRoute user = {user} path = {ROUTES.DASHBOARD} exact>
+            <Dashboard/>
+          </ProtectedRoute>
           <Route  component = {NotFound} />
         </Switch>
     </Router>
