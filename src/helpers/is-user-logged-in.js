@@ -1,0 +1,38 @@
+//making sure that signed-in users cannot access login page or sign up page
+
+import PropTypes from 'prop-types'
+import { Route, Redirect } from 'react-router-dom'
+
+
+const IsUserLoggedIn = ({ user, loggedInPath, children, ...rest}) => {
+    return (
+        <Route
+            {...rest}
+            render = {({ location }) => {
+                if(!user){
+                    return children
+                }
+
+                if(user){
+                    return (
+                        <Redirect
+                        to = {{
+                            pathname: loggedInPath,
+                            state: { from: location }
+                        }}
+                        />
+                    )
+                }
+                return null
+            }}
+        />
+    )
+}
+
+IsUserLoggedIn.propTypes = {
+    user: PropTypes.object,
+    loggedInPath: PropTypes.string.isRequired,
+    children: PropTypes.object.isRequired
+}
+
+export default IsUserLoggedIn
