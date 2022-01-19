@@ -4,12 +4,6 @@ import Header from './header'
 import Photos from './photos'
 import { getUserByUserName, getUserPhotosByUsername } from '../../services/firebase'
 
-const reducer = (state, newState) => ({ ...state, ...newState})
-const initialState = {
-    profile: {},
-    photosCollection: [],
-    followerCount:0
-}
 
 const Profile = ({user}) => {
 
@@ -34,7 +28,12 @@ const Profile = ({user}) => {
 
     return(
         <>
-            <Header/>
+            <Header
+            photosCount = {photosCollection ? photosCollection.length : 0}
+            profile = {profile}
+            followerCount = {followerCount}
+            setFollowerCount = {dispatch}
+            />
             <Photos photos = {photosCollection}/>
             <p>Hello {user.username}</p>
         </>
