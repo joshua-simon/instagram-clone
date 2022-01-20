@@ -8,7 +8,7 @@ const Header = ({
     photosCount, 
     followerCount, 
     setFollowerCount,
-    profile: {docId: profileDocId, userId: profileUserId, fullname, following = [], username: profileUsername} }) => {
+    profile: {docId: profileDocId, userId: profileUserId, fullname, following = [], followers = [], username: profileUsername} }) => {
 
     const { user } = useUser()
     const [ isFollowingProfile, setIsFollowingProfile ] = useState(false)
@@ -17,7 +17,10 @@ const Header = ({
     const activeBtnFollow = user.username && user.username !== profileUsername
 
     const handleToggleFollow = () => {
-        return 1
+        setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile)
+        setFollowerCount({
+            followerCount: isFollowingProfile ? followers.length - 1 : followers.length + 1 
+        })
     }
 
     useEffect(() => {
@@ -30,34 +33,60 @@ const Header = ({
         }
     },[user.username,profileUserId])
 
-    return(
-        <div className = 'grid grid-cols-3 gap-4 justify between mx-auto max-w-screen-lg'>
-           <div className = 'container flex justify-center'>
-                {user.username && (
-                    <img
-                    className = 'rounded-full h-40 w-40 flex'
-                    alt = {`${user.username} profile picture`}
-                    src = {`/images/avatars/${profileUsername}.jpg`}
-                />
-                )}
-           </div>
-           <div className = 'flex items-center justify-center flex-col col-span-2'>
-               <div className = 'container flex items-center'>
-                   <p className = 'text-2xl mr-4'>{profileUsername}</p>
-                   {/* makes sure you can't follow your own profile */}
-                   {activeBtnFollow && (
-                       <button
-                        className='bg-blue-medium font-bold text-sm rounded text-white w-20 h-8'
-                        type = 'button'
-                        onClick = {handleToggleFollow}
-                       >
-                        {isFollowingProfile ? 'Unfollow' : 'Follow'}
-                       </button>
-                   )}
-               </div>
-           </div>
+    return (
+      <div className="grid grid-cols-3 gap-4 justify between mx-auto max-w-screen-lg">
+        <div className="container flex justify-center">
+          {user.username && (
+            <img
+              className="rounded-full h-40 w-40 flex"
+              alt={`${user.username} profile picture`}
+              src={`/images/avatars/${profileUsername}.jpg`}
+            />
+          )}
         </div>
-    )
+        <div className="flex items-center justify-center flex-col col-span-2">
+          <div className="container flex items-center">
+            <p className="text-2xl mr-4">{profileUsername}</p>
+            {/* makes sure you can't follow your own profile */}
+            {activeBtnFollow && (
+              <button
+                className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"
+                type="button"
+                onClick={handleToggleFollow}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleToggleFollow();
+                  }
+                }}
+              >
+                {isFollowingProfile ? "Unfollow" : "Follow"}
+              </button>
+            )}
+          </div>
+          <div className="container flex mt-4">
+            {followers === undefined || following === undefined ? (
+              <Skeleton count={1} width={677} height={24} />
+            ) : (
+              <>
+                <p className="mr-10">
+                  <span className="font-bold">{photosCount}</span> photos
+                </p>
+                <p className="mr-10">
+                  <span className="font-bold">{followers.length}</span>
+                  {` `}
+                  {followers.length === 1 ? "follower" : "followers"}
+                </p>
+                <p className="mr-10">
+                  <span className="font-bold">{following.length}</span>
+                  {` `}
+                  following
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
 }
 
 Header.propTypes = {
@@ -69,6 +98,7 @@ Header.propTypes = {
         userId: PropTypes.string,
         fullName: PropTypes.string,
         username: PropTypes.string,
+        followers: PropTypes.array,
         following: PropTypes.array
     }).isRequired
 }
